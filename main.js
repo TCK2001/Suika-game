@@ -1,5 +1,5 @@
 import { Bodies, Body, Events, Engine, Render, Runner, World, Collision} from "matter-js";
-import { FRUITS_BASE } from "./fruits";
+import { FRUITS_HLW } from "./fruits";
 
 function createWorld(delta) {
   const engine = Engine.create();
@@ -15,19 +15,20 @@ function createWorld(delta) {
         wireframes: false,
         background: "#F7F4C8",
         width: 620,
-        height: 850,
+        height: 815,
       }
     }
   );
 
   const world = engine.world;
+
   // x에서 15, y에서 395만큼 즉 중앙점.
-  const leftWall = Bodies.rectangle(15, 395, 30, 790, {
+  const leftWall = Bodies.rectangle(15, 385, 30, 810, {
     isStatic: true,
     render: {fillStyle: "#E6B143"}
   });
 
-  const rightWall = Bodies.rectangle(605, 395, 30, 790, {
+  const rightWall = Bodies.rectangle(605, 385, 30, 810, {
     isStatic: true,
     render: {fillStyle: "#E6B143"}
   });
@@ -56,18 +57,19 @@ function createWorld(delta) {
   let disableAction = false;
   let interval = null;
   let num_suika = 0;
+  let gameEnded = false; // 새로운 변수 추가
 
-  // const runner = Runner.create();
-  //   const start = Date.now();
-  //   setInterval(() => {
-  //     Runner.tick(runner, engine, Date.now() - start);
-  //   }, delta);
+  const runner = Runner.create();
+    const start = Date.now();
+    setInterval(() => {
+      Runner.tick(runner, engine, Date.now() - start);
+    }, delta);
 
 
   function adddFruit(){
     //random
     const index = Math.floor(Math.random() * 5);
-    const fruit = FRUITS_BASE[index];
+    const fruit = FRUITS_HLW[index];
     const body = Bodies.circle(300, 50, fruit.radius, {
       index: index,
       //위에서 고정
@@ -86,7 +88,7 @@ function createWorld(delta) {
   }
   
   window.onkeydown = (event) => {
-    if (disableAction) {
+    if (disableAction || gameEnded) {
       return;
     }
     switch (event.code) {
@@ -138,48 +140,63 @@ function createWorld(delta) {
     }
   }
 
+  const canvas = document.querySelector('canvas');
+  const canvasStyle = canvas.style;
+  canvasStyle.marginTop = '20px';
+  canvasStyle.position = 'absolute';
+  canvasStyle.left = '50%';
+  canvasStyle.top = '50%';
+  canvasStyle.transform = 'translate(-50%, -50%)';
+
   Events.on(engine, "collisionStart", (event) => {
     event.pairs.forEach((collision) => {
-      if (collision.bodyA.index === collision.bodyB.index) {
-        const index = collision.bodyA.index;
-        
-        if (index === FRUITS_BASE.length - 1) {
-          return;
-        }
-
-        World.remove(world, [collision.bodyA, collision.bodyB]);
-
-        const newFruit = FRUITS_BASE[index + 1];
-        
-
-        const newBody = Bodies.circle(
-          collision.collision.supports[0].x,
-          collision.collision.supports[0].y,
-          newFruit.radius,
-          {
-            render: {
-              sprite: { texture: `${newFruit.name}.png` },
-            },
-            index: index + 1, 
+      if (!gameEnded) {
+        const indexA = collision.bodyA.index;
+        const indexB = collision.bodyB.index;
+  
+        if (indexA === indexB) {
+          const index = indexA;
+  
+          if (index === FRUITS_HLW.length - 1) {
+            return;
           }
-        );
-        console.log(newBody.index);
-        World.add(world, newBody)
-        if (newBody.index == 10) {
-          num_suika++;
+  
+          World.remove(world, [collision.bodyA, collision.bodyB]);
+  
+          const newFruit = FRUITS_HLW[index + 1];
+  
+          const newBody = Bodies.circle(
+            collision.collision.supports[0].x,
+            collision.collision.supports[0].y,
+            newFruit.radius,
+            {
+              render: {
+                sprite: { texture: `${newFruit.name}.png` },
+              },
+              index: index + 1,
+            }
+          );
+  
+          World.add(world, newBody);
+  
+          if (newBody.index === 10) {
+            num_suika++;
+          }
+        }
+  
+        if (!disableAction && (collision.bodyA.name === "topLine" || collision.bodyB.name === "topLine")) {
+          endGame("Game Over (Press F5 to Refresh the Page to Restart)");
+        } else if (num_suika === 2) {
+          endGame("You Win (Press F5 to Refresh the Page to Restart)");
         }
       }
-
-      if (!disableAction && (collision.bodyA.name === "topLine" || collision.bodyB.name === "topLine"))
-      {
-        alert("Game over (Press F5 to Refresh the Page to Restart)");
-      }
-      else if (num_suika === 2)
-      {
-        alert("You Win (Press F5 to Refresh the Page to Restart)");
-      }
-    })
+    });
   });
+
+  function endGame(message) {
+    alert(message);
+    gameEnded = true;
+  }
 
   adddFruit();
 }  
