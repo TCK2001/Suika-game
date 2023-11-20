@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/suika.png" />
     <style>
       body {
         margin: 0;
@@ -38,45 +38,6 @@
         text-decoration: none; /* 밑줄 제거 */
         animation: rainbow 5s linear infinite; /* 레인보우 애니메이션 적용 */
       }
-
-      #fruit-list-btn {
-        position: absolute;
-        top: 80px;
-        right: 20px;
-        color: #FFFFFF;
-        background-color: #2e2d2d; /* 수정 가능한 색상 */
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        font-size: 18px;
-        border-radius: 8px;
-        text-decoration: none; /* 밑줄 제거 */
-        animation: rainbow 5s linear infinite; /* 레인보우 애니메이션 적용 */
-      }
-      
-      
-      #fruit-list {
-        position: absolute;
-        top: 120px;
-        right: 20px;
-        display: none;
-        background-color: #333333;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 그림자 추가 */
-      }
-      
-      .fruit-item {
-        color: #FFFFFF;
-        font-size: 16px;
-        margin-bottom: 8px;
-        cursor: pointer;
-        transition: color 0.3s ease; /* 부드러운 색상 전환을 위한 트랜지션 추가 */
-      }
-      
-      .fruit-item:hover {
-        color: #ecf0f1; /* 호버 시 글자색 변경 */
-      }
       
       @keyframes rainbow {
         0% { color: #ff0000; } /* 빨강 */
@@ -94,34 +55,8 @@
   <body>
     <div id="game-title">Suika Game</div>
     <div id="github-link">GitHub: <a href="https://github.com/TCK2001" style="color: #FFFFFF; text-decoration: none;" target="_blank">https://github.com/TCK2001</a></div>
-    
-    <button id="fruit-list-btn">Fruit List</button>
-    <div id="fruit-list">
-      <div class="fruit-item" onclick="selectFruit('Apple')">Apple</div>
-      <div class="fruit-item" onclick="selectFruit('Banana')">Banana</div>
-      <div class="fruit-item" onclick="selectFruit('Orange')">Orange</div>
-      <!-- Add more fruit items as needed -->
-    </div>
 
     <script type="module" src="/main.js"></script>
-    <script>
-      const fruitListBtn = document.getElementById('fruit-list-btn');
-      const fruitList = document.getElementById('fruit-list');
 
-      fruitListBtn.addEventListener('click', toggleFruitList);
-
-      function toggleFruitList() {
-        fruitList.style.display = (fruitList.style.display === 'none') ? 'block' : 'none';
-      }
-
-      function selectFruit(fruit) {
-        // Implement your logic when a fruit is selected
-        alert(`Selected Fruit: ${fruit}`);
-        // You can modify this function to fit your needs
-        isGameStarted = true
-        console.log("isGameStarted:", isGameStarted);
-        return isGameStarted; // 이 부분을 추가
-      }
-    </script>
   </body>
 </html>
