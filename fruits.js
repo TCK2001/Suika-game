@@ -29,7 +29,7 @@
     },
     {
       name: "halloween/07_peach",
-      radius: 171 / 2,
+      radius: 142 / 2,
     },
     {
       name: "halloween/08_pineapple",
